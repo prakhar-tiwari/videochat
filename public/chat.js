@@ -1,4 +1,4 @@
-let socket = io.connect('http://localhost:3000'); 
+let socket = io.connect('/'); 
 
 let answersFrom = {}, offer;
 let peerConnection = window.RTCPeerConnection ||
@@ -48,7 +48,11 @@ socket.on('add-users', function (data) {
             id = data.users[i];
 
         el.setAttribute('id', id);
-        el.innerHTML = id;
+        let userbtn=document.createElement('button');
+        userbtn.className="btn btn-primary";
+        userbtn.innerText=document.getElementById('username').value;
+        el.appendChild(userbtn);
+        // el.innerHTML = id;
         el.addEventListener('click', function () {
             createOffer(id);
         });
