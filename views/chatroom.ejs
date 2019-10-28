@@ -1,0 +1,24 @@
+<%- include('./header.ejs') %>
+</head>
+
+<body>
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="header mx-auto">Simple Video Chat</h1>
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-4">
+                <video class="video-large" autoplay></video>
+            </div>
+            <div id="chat-user" class="col-lg-6 col-md-12 mb-4"></div>
+
+        </div>
+        <div class="row">
+            <div class="users-container" id="users-container">
+                <h4>Users</h4>
+                <div id="users"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="/public/chat.js"></script>
+    <%- include('./footer.ejs') %>
