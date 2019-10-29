@@ -1,7 +1,7 @@
 let socket = io.connect('/');
 
-socket.emit('register-user',{
-    user:document.getElementById('sender').value
+socket.emit('register-user', {
+    user: document.getElementById('sender').value
 })
 
 let answersFrom = {};
@@ -31,13 +31,15 @@ let pc = new peerConnection({
 });
 
 pc.onaddstream = function (obj) {
+    document.getElementById('chat-user').innerHTML = "";
     let vid = document.createElement('video');
     vid.setAttribute('class', 'video-small');
     vid.setAttribute('autoplay', 'autoplay');
-    vid.setAttribute('id', 'video-small');
-    vid.style = "width:100%;"
+    vid.setAttribute('id', 'remotevideo');
+    vid.style = "width:100%;";
     document.getElementById('chat-user').appendChild(vid);
     vid.srcObject = obj.stream;
+    document.getElementById('hangup-button').disabled = false;
 }
 
 navigator.getUserMedia({ video: true, audio: true }, function (stream) {
@@ -49,20 +51,33 @@ navigator.getUserMedia({ video: true, audio: true }, function (stream) {
 
 
 socket.on('add-users', function (data) {
+    let table = document.getElementById('userList');
+    let iconColumn = document.createElement('td');
+    let icon = document.createElement('i');
+    icon.className = "fa fa-youtube-play";
+    icon.style = "color:red";
+    iconColumn.appendChild(icon);
     for (let i = 0; i < data.users.length; i++) {
-        let el = document.createElement('div');
         let id = data.users[i];
+        let row = document.createElement('tr');
+        row.setAttribute('id', id);
+        row.className = "tablerow";
+        let header = document.createElement('th');
+        header.setAttribute('scope', 'row');
+        header.innerHTML = i + 1;
+        let column = document.createElement('td');
+        column.style = "cursor:pointer";
+        column.innerHTML = data.receiver;
 
-        el.setAttribute('id', id);
-        let userbtn = document.createElement('button');
-        userbtn.className = "btn btn-primary";
-        userbtn.innerText = data.receiver;
-        el.appendChild(userbtn);
-        // el.innerHTML = id;
-        el.addEventListener('click', function () {
+        row.appendChild(header);
+        row.appendChild(column);
+        row.appendChild(iconColumn);
+
+        row.addEventListener('click', function () {
             createOffer(id);
         });
-        document.getElementById('users').appendChild(el);
+
+        table.appendChild(row);
     }
 });
 
@@ -107,6 +122,28 @@ function createOffer(id) {
             });
         }, error);
     }, error);
+}
+
+function hangUpCall() {
+    let localVideo = document.getElementById('localvideo');
+    let remoteVideo = document.getElementById('remotevideo');
+
+    if (remoteVideo.srcObject) {
+        remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+    }
+
+    if (localVideo.srcObject) {
+        localVideo.srcObject.getTracks().forEach(track => track.stop());
+    }
+
+    pc.close();
+    pc = null;
+    remoteVideo.removeAttribute("src");
+    remoteVideo.removeAttribute("srcObject");
+    localVideo.removeAttribute("src");
+    remoteVideo.removeAttribute("srcObject");
+
+    window.location.href = "/";
 }
 
 function error(err) {

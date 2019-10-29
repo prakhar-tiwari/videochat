@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const { validationResult } = require('express-validator');
 
 exports.getLogin = (req, res, next) => {
     res.render('login', {
@@ -16,10 +17,23 @@ exports.getLogin = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {
     const { email, password } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('login', {
+            path: '/login',
+            pageTitle: 'Login',
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+                email: email,
+                password: password
+            },
+            validationErrors: errors.array()
+        });
+    }
     User.findOne({ email: email })
         .then(user => {
             if (!user) {
-                return res.status(422).render('auth/login', {
+                return res.render('login', {
                     path: '/login',
                     pageTitle: 'Login',
                     errorMessage: 'Invalid email or password.',
@@ -69,7 +83,6 @@ exports.getSignup = (req, res, next) => {
         errorMessage: '',
         oldInput: {
             fullName: '',
-            userName: '',
             email: '',
             password: '',
             confirmPassword: ''
@@ -79,13 +92,26 @@ exports.getSignup = (req, res, next) => {
 }
 
 exports.postSignup = (req, res, next) => {
-    const { fullName, userName, email, password, confirmPassword } = req.body;
-    console.log(fullName)
+    const { fullName, email, password, confirmPassword } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).render('signup', {
+            path: '/signup',
+            pageTitle: 'Signup',
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+                fullName: fullName,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword
+            },
+            validationErrors: errors.array()
+        });
+    }
     bcrypt.hash(password, 12)
         .then(hashPassword => {
             const user = new User({
                 fullName: fullName,
-                userName: userName,
                 email: email,
                 password: hashPassword
             });

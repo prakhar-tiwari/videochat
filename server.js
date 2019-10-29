@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const flash=require('connect-flash');
 
 const keys = require('./config/keys');
 
@@ -28,6 +29,8 @@ app.use(
         saveUninitialized: false
     })
 );
+
+app.use(flash());
 
 app.use(authRoutes);
 app.use(chatRoomRoutes);

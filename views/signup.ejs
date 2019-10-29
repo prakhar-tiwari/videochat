@@ -7,7 +7,7 @@
 <body>
 
     <main>
-        <% if(errorMessage.length) {%>
+        <%  if(errorMessage.length) { %>
         <div class="user-message user-message--error"><%= errorMessage %></div>
         <% } %>
         <form class="login-form" action="/signup" method="POST" novalidate>
@@ -15,11 +15,6 @@
                 <label for="fullname">Full Name</label>
                 <input class="<%= validationErrors.find(e => e.param === 'fullname') ? 'invalid':'' %>" type="text"
                     name="fullName" id="fullname" value="<%= oldInput.fullName %>">
-            </div>
-            <div class="form-control">
-                <label for="username">User Name</label>
-                <input class="<%= validationErrors.find(e => e.param === 'username') ? 'invalid':'' %>" type="text"
-                    name="userName" id="username" value="<%= oldInput.userName %>">
             </div>
             <div class="form-control">
                 <label for="email">E-Mail</label>

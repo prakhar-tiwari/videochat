@@ -7,19 +7,26 @@
         <h1 class="header mx-auto">Simple Video Chat</h1>
         <div class="row">
             <div class="col-lg-6 col-md-12 mb-4">
-                <video class="video-large" autoplay></video>
+                <video id="localvideo" class="video-large" autoplay></video>
             </div>
             <div id="chat-user" class="col-lg-6 col-md-12 mb-4"></div>
             <input type="hidden" name="sender" id="sender" value="<%= sender %>" />
-            <input type="hidden" name="sender" id="sender" value="<%= receiver %>" />
+            <input type="hidden" name="receiver" id="receiver" value="<%= receiver %>" />
 
         </div>
         <div class="row">
             <div class="users-container" id="users-container">
                 <h4>Users</h4>
-                <div id="users"></div>
+                <div id="users">
+                    <table id="userList" class="table table-hover">
+
+                    </table>
+                </div>
             </div>
         </div>
+        <button id="hangup-button" onclick="hangUpCall();" disabled>
+            Hang Up
+        </button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="/public/chat.js"></script>
