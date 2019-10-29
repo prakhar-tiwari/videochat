@@ -1,0 +1,43 @@
+<%- include('./header.ejs') %>
+<style>
+    .table-borderless>tbody>tr>td,
+    .table-borderless>tbody>tr>th {
+        border: none;
+    }
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title" style="text-align: center;">Available Users</h1>
+                        <%
+                        if(users){
+                        %>
+                        <table class="table table-borderless table-dark table-hover">
+                            <tbody>
+                                <%
+                                for(let i=0;i<users.length;i++){
+                                %>
+                                <tr>
+                                    <th scope="row"><%= i+1 %></th>
+                                    <td style="cursor: pointer;"><a style="text-decoration: none;" href="/chat/<%= users[i].fullName %>"><%= users[i].fullName %></a></td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <%
+                        }
+                        else {
+                    %>
+                        <h1>There are no users yet</h2>
+                            <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./footer.ejs') %>

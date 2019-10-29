@@ -1,6 +1,12 @@
-let socket = io.connect('/'); 
+let socket = io.connect('/');
 
-let answersFrom = {}, offer;
+socket.emit('register-user',{
+    user:document.getElementById('sender').value
+})
+
+let answersFrom = {};
+let offer;
+let usersInfo;
 let peerConnection = window.RTCPeerConnection ||
     window.mozRTCPeerConnection ||
     window.webkitRTCPeerConnection ||
@@ -11,7 +17,7 @@ let sessionDescription = window.RTCSessionDescription ||
     window.webkitRTCSessionDescription ||
     window.msRTCSessionDescription;
 
-    navigator.getUserMedia  = navigator.getUserMedia ||
+navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia;
@@ -29,14 +35,14 @@ pc.onaddstream = function (obj) {
     vid.setAttribute('class', 'video-small');
     vid.setAttribute('autoplay', 'autoplay');
     vid.setAttribute('id', 'video-small');
-    vid.style="width:100%;"
+    vid.style = "width:100%;"
     document.getElementById('chat-user').appendChild(vid);
     vid.srcObject = obj.stream;
 }
 
-navigator.getUserMedia({video: true, audio: true}, function (stream) {
+navigator.getUserMedia({ video: true, audio: true }, function (stream) {
     let video = document.querySelector('video');
-    video.style="width:100%";
+    video.style = "width:100%";
     video.srcObject = stream;
     pc.addStream(stream);
 }, error);
@@ -44,13 +50,13 @@ navigator.getUserMedia({video: true, audio: true}, function (stream) {
 
 socket.on('add-users', function (data) {
     for (let i = 0; i < data.users.length; i++) {
-        let el = document.createElement('div'),
-            id = data.users[i];
+        let el = document.createElement('div');
+        let id = data.users[i];
 
         el.setAttribute('id', id);
-        let userbtn=document.createElement('button');
-        userbtn.className="btn btn-primary";
-        userbtn.innerText=document.getElementById('username').value;
+        let userbtn = document.createElement('button');
+        userbtn.className = "btn btn-primary";
+        userbtn.innerText = data.receiver;
         el.appendChild(userbtn);
         // el.innerHTML = id;
         el.addEventListener('click', function () {
